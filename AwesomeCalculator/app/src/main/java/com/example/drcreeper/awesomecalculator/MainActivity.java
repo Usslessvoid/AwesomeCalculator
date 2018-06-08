@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import java.io.*;
 
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 
@@ -19,6 +20,7 @@ private Button div;
 private Button slove;
 private Button clear;
 private Button erace;
+private Calculator calculator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,18 @@ private Button erace;
         slove = (Button)findViewById(R.id.slove_button);
         clear = (Button)findViewById(R.id.clear_button);
         erace = (Button)findViewById(R.id.erace_button);
-        final Calculator calculator = new Calculator(mainTextView);
+        try{
+            File file = new File(getFilesDir(),"save.dat");
+            FileInputStream inFile = new FileInputStream(file);
+            ObjectInputStream inputStream = new ObjectInputStream(inFile);
+            calculator = (Calculator)inputStream.readObject();
+            inputStream.close();
+            inFile.close();
+        }catch (IOException | ClassNotFoundException e){
+            mainTextView.setText(getFilesDir().getPath());
+            calculator = new Calculator(mainTextView);
+        }
+
         for(final Button button : numbers){
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,6 +114,21 @@ private Button erace;
                calculator.eracePress();
            }
         });
+    }
 
+    @Override
+    protected void onDestroy() {
+        try {
+            File file = new File(getFilesDir(),"save.dat");
+            FileOutputStream saveFile = new FileOutputStream(file);
+            ObjectOutputStream saveStream = new ObjectOutputStream(saveFile);
+            saveStream.writeObject(calculator);
+            saveStream.flush();
+            saveStream.close();
+            saveFile.close();
+        }catch (IOException e){
+
+        }
+        super.onDestroy();
     }
 }

@@ -48,6 +48,10 @@ public class Calculator implements Serializable {
     public void setFirstOperand(double firstOperand) {
         this.firstOperand = firstOperand;
     }
+    public void toZero(){
+        view.setText("0");
+        isDotAviable = true;
+    }
     private double parseNum(){
         double result = 0;
         try {
@@ -69,7 +73,7 @@ public class Calculator implements Serializable {
     }
     public void numPress(char c){
         if(isSolved){
-            view.setText("0");
+            toZero();
             isSolved = false;
         }
         if(view.getText().length() < TEXT_FIELD_SIZE) {
@@ -89,14 +93,13 @@ public class Calculator implements Serializable {
     public void operatorPress(char c){
         operand = c;
         firstOperand = parseNum();
-        view.setText("0");
-        isDotAviable = true;
-
+        toZero();
     }
     public void solvePress(){
         if(isSolved){
             firstOperand = parseNum();
         }else{
+            isSolved = true;
             secondOperand = parseNum();
         }
         switch (operand){
@@ -120,8 +123,7 @@ public class Calculator implements Serializable {
     public void clear(){
         firstOperand = 0;
         secondOperand = 0;
-        view.setText("0");
-        isDotAviable = true;
+        toZero();
         isSolved = false;
     }
     public void eracePress(){
@@ -130,7 +132,7 @@ public class Calculator implements Serializable {
             isDotAviable = true;
         }
         if(oldText.length() == 1) {
-            view.setText("0");
+            toZero();
         }else if (oldText.length() > 0){
             view.setText(oldText.substring(0, oldText.length() - 1));
         }
