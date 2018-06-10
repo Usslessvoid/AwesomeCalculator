@@ -1,18 +1,17 @@
 package com.example.drcreeper.awesomecalculator.math;
 
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import java.io.Serializable;
 
 public class Calculator implements Serializable {
+
     private static final int TEXT_FIELD_SIZE = 16;
-    private TextView view = null;
-    private double firstOperand = 0 ;
+
+    private String currentText = "0";
+    private double firstOperand = 0;
     private double secondOperand = 0;
-    private double result;
-    private char operand;
+    private Operator operand = Operator.NONE;
     private boolean isDotAviable = true;
     private boolean isSolved = false;
 
@@ -20,16 +19,20 @@ public class Calculator implements Serializable {
         super();
     }
 
-    public Calculator(TextView view) {
-        this.view = view;
+    public String getCurrentText() {
+        return currentText;
     }
 
-    public View getView() {
-        return view;
+    public void setCurrentText(String currentText) {
+        this.currentText = currentText;
     }
 
-    public void setView(TextView view) {
-        this.view = view;
+    public double getFirstOperand() {
+        return firstOperand;
+    }
+
+    public void setFirstOperand(double firstOperand) {
+        this.firstOperand = firstOperand;
     }
 
     public double getSecondOperand() {
@@ -40,62 +43,89 @@ public class Calculator implements Serializable {
         this.secondOperand = secondOperand;
     }
 
-    public double getFirstOperand() {
-
-        return firstOperand;
+    public Operator getOperand() {
+        return operand;
     }
 
-    public void setFirstOperand(double firstOperand) {
-        this.firstOperand = firstOperand;
+    public void setOperand(Operator operand) {
+        this.operand = operand;
     }
-    public void toZero(){
-        view.setText("0");
+
+    public boolean isDotAviable() {
+        return isDotAviable;
+    }
+
+    public void setDotAviable(boolean dotAviable) {
+        isDotAviable = dotAviable;
+    }
+
+    public boolean isSolved() {
+        return isSolved;
+    }
+
+    public void setSolved(boolean solved) {
+        isSolved = solved;
+    }
+
+    private void toZero(){
+        currentText = "0";
         isDotAviable = true;
     }
+
     private double parseNum(){
         double result = 0;
         try {
-            result = Double.parseDouble(view.getText().toString());
+            result = Double.parseDouble(currentText);
         }catch (NumberFormatException e){
             //Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show();
         }
         return result;
     }
+
     private void show(double s){
         String outputField = Double.toString(s);
         if(outputField.endsWith(".0")){
             outputField = outputField.substring(0,outputField.length() - 2);
         }
+        if(outputField.contains(".")){
+            while (outputField.endsWith("0")){
+                outputField = outputField.substring(0,outputField.length() - 1);
+            }
+        }
         if(outputField.length()>TEXT_FIELD_SIZE){
             outputField = outputField.substring(0,TEXT_FIELD_SIZE);
         }
-        view.setText(outputField);
+        currentText = outputField;
     }
+
     public void numPress(char c){
         if(isSolved){
             toZero();
             isSolved = false;
         }
-        if(view.getText().length() < TEXT_FIELD_SIZE) {
+        if(currentText.length() < TEXT_FIELD_SIZE) {
             if(c == '.'){
                 if(isDotAviable){
-                    view.setText(view.getText().toString() + c);
+                    currentText = currentText + ".";
                     isDotAviable = false;
                 }
             }else {
-                if(view.getText().toString().equals("0")) {
-                    view.setText("");
+                if(currentText.equals("0")) {
+                    currentText = "";
                 }
-                view.setText(view.getText().toString() + c);
+                currentText = currentText + c;
             }
         }
     }
-    public void operatorPress(char c){
+
+    public void operatorPress(Operator c){
         operand = c;
         firstOperand = parseNum();
         toZero();
     }
+
     public void solvePress(){
+        double result;
         if(isSolved){
             firstOperand = parseNum();
         }else{
@@ -103,16 +133,16 @@ public class Calculator implements Serializable {
             secondOperand = parseNum();
         }
         switch (operand){
-            case '+':
+            case ADD:
                 result = firstOperand + secondOperand;
                 break;
-            case '-':
+            case SUB:
                 result = firstOperand - secondOperand;
                 break;
-            case '*':
+            case MUL:
                 result = firstOperand * secondOperand;
                 break;
-            case '/':
+            case DIV:
                 result = firstOperand / secondOperand;
                 break;
             default:
@@ -120,21 +150,28 @@ public class Calculator implements Serializable {
         }
         show(result);
     }
+
     public void clear(){
         firstOperand = 0;
         secondOperand = 0;
         toZero();
         isSolved = false;
+        operand = Operator.NONE;
     }
+
     public void eracePress(){
-        String oldText = view.getText().toString();
+        String oldText = currentText;
         if(oldText.endsWith(".")){
             isDotAviable = true;
         }
         if(oldText.length() == 1) {
             toZero();
         }else if (oldText.length() > 0){
-            view.setText(oldText.substring(0, oldText.length() - 1));
+            currentText = oldText.substring(0, oldText.length() - 1);
         }
+    }
+
+    public void fromEditor(SharedPreferences preferences){
+
     }
 }

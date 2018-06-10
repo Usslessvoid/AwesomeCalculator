@@ -1,68 +1,76 @@
 package com.example.drcreeper.awesomecalculator;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import java.io.*;
 
 import com.example.drcreeper.awesomecalculator.math.Calculator;
+import com.example.drcreeper.awesomecalculator.math.Operator;
+
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-private TextView mainTextView;
-private Button numbers[];
-private Button dot;
-private Button add;
-private Button sub;
-private Button mul;
-private Button div;
-private Button slove;
-private Button clear;
-private Button erace;
-private Calculator calculator;
+
+    public static final String PREFERENCES_KEYS[] = {
+            "calculatorCurentText",
+            "calculatorFirstOperand",
+            "calculatorSecondOperand",
+            "calculatorOperator",
+            "calculatorIsDotAviable",
+            "calculatorIsSolved"
+    };
+
+    @BindView(R.id.main_textView)
+    TextView mainTextView;
+    @BindViews({
+            R.id.num_0_button,
+            R.id.num_1_button,
+            R.id.num_2_button,
+            R.id.num_3_button,
+            R.id.num_4_button,
+            R.id.num_5_button,
+            R.id.num_6_button,
+            R.id.num_7_button,
+            R.id.num_8_button,
+            R.id.num_9_button
+    })
+    Button[] numbers;
+    @BindView(R.id.num_dot_button)
+    Button dot;
+    @BindView(R.id.add_button)
+    Button add;
+    @BindView(R.id.sub_button)
+    Button sub;
+    @BindView(R.id.mul_button)
+    Button mul;
+    @BindView(R.id.div_button)
+    Button div;
+    @BindView(R.id.slove_button)
+    Button slove;
+    @BindView(R.id.clear_button)
+    Button clear;
+    @BindView(R.id.erace_button)
+    Button erace;
+    Calculator calculator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainTextView = (TextView)findViewById(R.id.main_textView);
-        numbers = new Button[]{
-                (Button) findViewById(R.id.num_0_button),
-                (Button) findViewById(R.id.num_1_button),
-                (Button) findViewById(R.id.num_2_button),
-                (Button) findViewById(R.id.num_3_button),
-                (Button) findViewById(R.id.num_4_button),
-                (Button) findViewById(R.id.num_5_button),
-                (Button) findViewById(R.id.num_6_button),
-                (Button) findViewById(R.id.num_7_button),
-                (Button) findViewById(R.id.num_8_button),
-                (Button) findViewById(R.id.num_9_button)
-        };
-        dot = (Button)findViewById(R.id.num_dot_button);
-        add = (Button)findViewById(R.id.add_button);
-        sub = (Button)findViewById(R.id.sub_button);
-        mul = (Button)findViewById(R.id.mul_button);
-        div = (Button)findViewById(R.id.div_button);
-        slove = (Button)findViewById(R.id.slove_button);
-        clear = (Button)findViewById(R.id.clear_button);
-        erace = (Button)findViewById(R.id.erace_button);
-        try{
-            File file = new File(getFilesDir(),"save.dat");
-            FileInputStream inFile = new FileInputStream(file);
-            ObjectInputStream inputStream = new ObjectInputStream(inFile);
-            calculator = (Calculator)inputStream.readObject();
-            inputStream.close();
-            inFile.close();
-        }catch (IOException | ClassNotFoundException e){
-            mainTextView.setText(getFilesDir().getPath());
-            calculator = new Calculator(mainTextView);
-        }
-
-        for(final Button button : numbers){
+        ButterKnife.bind(this);
+        calculator = new Calculator();
+        restoreState();
+        for (final Button button : numbers) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     calculator.numPress(button.getText().charAt(0));
+                    refresh();
                 }
             });
         }
@@ -70,65 +78,85 @@ private Calculator calculator;
             @Override
             public void onClick(View v) {
                 calculator.numPress('.');
+                refresh();
             }
         });
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculator.operatorPress('+');
+                calculator.operatorPress(Operator.ADD);
+                refresh();
             }
         });
         sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculator.operatorPress('-');
+                calculator.operatorPress(Operator.SUB);
+                refresh();
             }
         });
         mul.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculator.operatorPress('*');
+                calculator.operatorPress(Operator.MUL);
+                refresh();
             }
         });
         div.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculator.operatorPress('/');
+                calculator.operatorPress(Operator.DIV);
+                refresh();
             }
         });
         slove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculator.solvePress();
+                refresh();
             }
         });
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculator.clear();
+                refresh();
             }
         });
-        erace.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View v){
-               calculator.eracePress();
-           }
+        erace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculator.eracePress();
+                refresh();
+            }
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        try {
-            File file = new File(getFilesDir(),"save.dat");
-            FileOutputStream saveFile = new FileOutputStream(file);
-            ObjectOutputStream saveStream = new ObjectOutputStream(saveFile);
-            saveStream.writeObject(calculator);
-            saveStream.flush();
-            saveStream.close();
-            saveFile.close();
-        }catch (IOException e){
+    private void saveState(){
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PREFERENCES_KEYS[0],calculator.getCurrentText());
+        editor.putFloat(PREFERENCES_KEYS[1],(float)calculator.getFirstOperand());
+        editor.putFloat(PREFERENCES_KEYS[2],(float)calculator.getSecondOperand());
+        editor.putString(PREFERENCES_KEYS[3],calculator.getOperand().name());
+        editor.putBoolean(PREFERENCES_KEYS[4],calculator.isDotAviable());
+        editor.putBoolean(PREFERENCES_KEYS[5],calculator.isSolved());/**/
+        editor.apply();
+    }
 
-        }
-        super.onDestroy();
+    private void restoreState(){
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        calculator.setCurrentText(preferences.getString(PREFERENCES_KEYS[0],"0"));
+        calculator.setFirstOperand(preferences.getFloat(PREFERENCES_KEYS[1],0));
+        calculator.setSecondOperand(preferences.getFloat(PREFERENCES_KEYS[2],0));
+        calculator.setOperand(Operator.valueOf(preferences.getString(PREFERENCES_KEYS[3],"NONE")));
+        calculator.setDotAviable(preferences.getBoolean(PREFERENCES_KEYS[4],true));
+        calculator.setSolved(preferences.getBoolean(PREFERENCES_KEYS[5],false));/**/
+        refresh();
+    }
+
+    public void refresh(){
+        mainTextView.setText(calculator.getCurrentText());
+        saveState();
     }
 }
