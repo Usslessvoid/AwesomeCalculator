@@ -1,12 +1,14 @@
 package com.example.drcreeper.awesomecalculator;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.drcreeper.awesomecalculator.fragments.CalkuulatorFragment;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 
@@ -14,7 +16,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     public static final String PREFERENCES_KEYS[] = {
             "calculatorCurentText",
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             "calculatorIsDotAviable",
             "calculatorIsSolved"
     };
-
+    Fragment calculatorFragment;
     @BindView(R.id.main_textView)
     TextView mainTextView;
     @BindViews({
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        calculatorFragment = new CalkuulatorFragment();
         ButterKnife.bind(this);
         calculator = new Calculator();
         restoreState();
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void saveState(){
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -140,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putFloat(PREFERENCES_KEYS[2],(float)calculator.getSecondOperand());
         editor.putString(PREFERENCES_KEYS[3],calculator.getOperand().name());
         editor.putBoolean(PREFERENCES_KEYS[4],calculator.isDotAviable());
-        editor.putBoolean(PREFERENCES_KEYS[5],calculator.isSolved());/**/
+        editor.putBoolean(PREFERENCES_KEYS[5],calculator.isSolved());
         editor.apply();
     }
 
@@ -151,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         calculator.setSecondOperand(preferences.getFloat(PREFERENCES_KEYS[2],0));
         calculator.setOperand(Operator.valueOf(preferences.getString(PREFERENCES_KEYS[3],"NONE")));
         calculator.setDotAviable(preferences.getBoolean(PREFERENCES_KEYS[4],true));
-        calculator.setSolved(preferences.getBoolean(PREFERENCES_KEYS[5],false));/**/
+        calculator.setSolved(preferences.getBoolean(PREFERENCES_KEYS[5],false));
         refresh();
     }
 
@@ -159,4 +164,5 @@ public class MainActivity extends AppCompatActivity {
         mainTextView.setText(calculator.getCurrentText());
         saveState();
     }
+
 }
