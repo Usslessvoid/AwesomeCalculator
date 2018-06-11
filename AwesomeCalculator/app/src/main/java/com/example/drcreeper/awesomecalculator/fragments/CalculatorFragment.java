@@ -1,6 +1,8 @@
 package com.example.drcreeper.awesomecalculator.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import com.example.drcreeper.awesomecalculator.R;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
+import com.example.drcreeper.awesomecalculator.propertywork.CalculatorWriter;
+import com.example.drcreeper.awesomecalculator.propertywork.PreferencesConstants;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -58,8 +62,8 @@ public class CalculatorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this, view);
         calculator = new Calculator();
-        calculator.setCurrentText("0000");
-       // restoreState();
+        CalculatorWriter.restoreState(calculator,getActivity().getSharedPreferences(PreferencesConstants.FILE_NAME, Context.MODE_PRIVATE));
+        refresh();
         for (final Button button : numbers) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,6 +135,7 @@ public class CalculatorFragment extends Fragment {
 
     public void refresh() {
         mainTextView.setText(calculator.getCurrentText());
-        //saveState();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PreferencesConstants.FILE_NAME,0);
+        CalculatorWriter.saveState(calculator,sharedPreferences);
     }
 }
