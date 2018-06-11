@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import java.io.Serializable;
 
-public class Calculator implements Serializable {
+public class Calculator {
 
     private static final int TEXT_FIELD_SIZE = 16;
 
@@ -12,7 +12,7 @@ public class Calculator implements Serializable {
     private double firstOperand = 0;
     private double secondOperand = 0;
     private Operator operand = Operator.NONE;
-    private boolean isDotAviable = true;
+    private boolean isDotAvailable = true;
     private boolean isSolved = false;
 
     public Calculator() {
@@ -52,11 +52,11 @@ public class Calculator implements Serializable {
     }
 
     public boolean isDotAviable() {
-        return isDotAviable;
+        return isDotAvailable;
     }
 
-    public void setDotAviable(boolean dotAviable) {
-        isDotAviable = dotAviable;
+    public void setDotAvailable(boolean dotAviable) {
+        isDotAvailable = dotAviable;
     }
 
     public boolean isSolved() {
@@ -69,7 +69,7 @@ public class Calculator implements Serializable {
 
     private void toZero(){
         currentText = "0";
-        isDotAviable = true;
+        isDotAvailable = true;
     }
 
     private double parseNum(){
@@ -77,7 +77,6 @@ public class Calculator implements Serializable {
         try {
             result = Double.parseDouble(currentText);
         }catch (NumberFormatException e){
-            //Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -105,9 +104,9 @@ public class Calculator implements Serializable {
         }
         if(currentText.length() < TEXT_FIELD_SIZE) {
             if(c == '.'){
-                if(isDotAviable){
+                if(isDotAvailable){
                     currentText = currentText + ".";
-                    isDotAviable = false;
+                    isDotAvailable = false;
                 }
             }else {
                 if(currentText.equals("0")) {
@@ -159,19 +158,15 @@ public class Calculator implements Serializable {
         operand = Operator.NONE;
     }
 
-    public void eracePress(){
+    public void erasePress(){
         String oldText = currentText;
         if(oldText.endsWith(".")){
-            isDotAviable = true;
+            isDotAvailable = true;
         }
         if(oldText.length() == 1) {
             toZero();
         }else if (oldText.length() > 0){
             currentText = oldText.substring(0, oldText.length() - 1);
         }
-    }
-
-    public void fromEditor(SharedPreferences preferences){
-
     }
 }
