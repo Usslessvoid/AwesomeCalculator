@@ -13,7 +13,7 @@ public class CalculatorWriter {
         editor.putFloat(PreferencesConstants.KEY_FIRST_OPERAND,(float)calculator.getFirstOperand());
         editor.putFloat(PreferencesConstants.KEY_SECOND_OPERAND,(float)calculator.getSecondOperand());
         editor.putString(PreferencesConstants.KEY_OPERATOR,calculator.getOperand().name());
-        editor.putBoolean(PreferencesConstants.KEY_DOT_AVAILABLE,calculator.isDotAviable());
+        editor.putBoolean(PreferencesConstants.KEY_DOT_AVAILABLE,calculator.isDotAvailable());
         editor.putBoolean(PreferencesConstants.KEY_SOLVED,calculator.isSolved());
         editor.apply();
     }

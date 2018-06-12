@@ -1,12 +1,8 @@
 package com.example.drcreeper.awesomecalculator.math;
 
-import android.content.SharedPreferences;
-
-import java.io.Serializable;
-
 public class Calculator {
 
-    private static final int TEXT_FIELD_SIZE = 16;
+    private static final int TEXT_FIELD_SIZE = 17;
 
     private String currentText = "0";
     private double firstOperand = 0;
@@ -51,12 +47,12 @@ public class Calculator {
         this.operand = operand;
     }
 
-    public boolean isDotAviable() {
+    public boolean isDotAvailable() {
         return isDotAvailable;
     }
 
-    public void setDotAvailable(boolean dotAviable) {
-        isDotAvailable = dotAviable;
+    public void setDotAvailable(boolean dotAvailable) {
+        isDotAvailable = dotAvailable;
     }
 
     public boolean isSolved() {
@@ -77,6 +73,7 @@ public class Calculator {
         try {
             result = Double.parseDouble(currentText);
         }catch (NumberFormatException e){
+            clear();
         }
         return result;
     }
@@ -101,6 +98,7 @@ public class Calculator {
         if(isSolved){
             toZero();
             isSolved = false;
+            operand = Operator.NONE;
         }
         if(currentText.length() < TEXT_FIELD_SIZE) {
             if(c == '.'){
@@ -145,7 +143,7 @@ public class Calculator {
                 result = firstOperand / secondOperand;
                 break;
             default:
-                result = firstOperand;
+                result = parseNum();
         }
         show(result);
     }
