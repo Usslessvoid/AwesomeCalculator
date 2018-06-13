@@ -8,8 +8,10 @@ public class Calculator {
     private double firstOperand = 0;
     private double secondOperand = 0;
     private Operator operand = Operator.NONE;
+    private State state = State.INITIAL;
     private boolean isDotAvailable = true;
-    private boolean isSolved = false;
+
+
 
     public Calculator() {
         super();
@@ -35,6 +37,14 @@ public class Calculator {
         return secondOperand;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public void setSecondOperand(double secondOperand) {
         this.secondOperand = secondOperand;
     }
@@ -53,14 +63,6 @@ public class Calculator {
 
     public void setDotAvailable(boolean dotAvailable) {
         isDotAvailable = dotAvailable;
-    }
-
-    public boolean isSolved() {
-        return isSolved;
-    }
-
-    public void setSolved(boolean solved) {
-        isSolved = solved;
     }
 
     private void toZero(){
@@ -94,11 +96,33 @@ public class Calculator {
         currentText = outputField;
     }
 
+    private double currentSolve(){
+        double result;
+        switch (operand){
+            case ADD:
+                result = firstOperand + secondOperand;
+                break;
+            case SUB:
+                result = firstOperand - secondOperand;
+                break;
+            case MUL:
+                result = firstOperand * secondOperand;
+                break;
+            case DIV:
+                result = firstOperand / secondOperand;
+                break;
+            default:
+                result = parseNum();
+        }
+        return result;
+    }
     public void numPress(char c){
-        if(isSolved){
+        if(state == State.SOLVED){
+            clear();
+        }
+        if(state == State.OPERATOR_CHECKED){
             toZero();
-            isSolved = false;
-            operand = Operator.NONE;
+            state = State.SECOND_NUM_ENTERED;
         }
         if(currentText.length() < TEXT_FIELD_SIZE) {
             if(c == '.'){
@@ -116,44 +140,62 @@ public class Calculator {
     }
 
     public void operatorPress(Operator c){
-        operand = c;
-        firstOperand = parseNum();
-        toZero();
+        switch(state){
+            case INITIAL:
+                firstOperand = parseNum();
+                toZero();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+                break;
+            case OPERATOR_CHECKED:
+                operand = c;
+                secondOperand = parseNum();
+                break;
+            case SECOND_NUM_ENTERED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+                break;
+            case SOLVED:
+                firstOperand = parseNum();
+                toZero();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+        }
     }
 
     public void solvePress(){
-        double result;
-        if(isSolved){
-            firstOperand = parseNum();
-        }else{
-            isSolved = true;
-            secondOperand = parseNum();
+        switch(state){
+            case INITIAL:
+            case OPERATOR_CHECKED:
+                show(firstOperand);
+            case SECOND_NUM_ENTERED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                state = State.SOLVED;
+                break;
+            case SOLVED:
+                firstOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                break;
+            case SOLVED_OPERATOR_CHECKED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                state = State.SOLVED;
         }
-        switch (operand){
-            case ADD:
-                result = firstOperand + secondOperand;
-                break;
-            case SUB:
-                result = firstOperand - secondOperand;
-                break;
-            case MUL:
-                result = firstOperand * secondOperand;
-                break;
-            case DIV:
-                result = firstOperand / secondOperand;
-                break;
-            default:
-                result = parseNum();
-        }
-        show(result);
     }
 
     public void clear(){
+        toZero();
         firstOperand = 0;
         secondOperand = 0;
-        toZero();
-        isSolved = false;
         operand = Operator.NONE;
+        state = State.INITIAL;
     }
 
     public void erasePress(){
@@ -163,6 +205,9 @@ public class Calculator {
         }
         if(oldText.length() == 1) {
             toZero();
+            if(state == State.SECOND_NUM_ENTERED){
+                state = State.OPERATOR_CHECKED;
+            }
         }else if (oldText.length() > 0){
             currentText = oldText.substring(0, oldText.length() - 1);
         }

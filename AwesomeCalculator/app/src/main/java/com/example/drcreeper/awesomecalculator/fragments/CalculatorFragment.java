@@ -13,12 +13,13 @@ import android.widget.TextView;
 import com.example.drcreeper.awesomecalculator.R;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
+import com.example.drcreeper.awesomecalculator.propertywork.CalculatorPreferencesContract;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorWriter;
-import com.example.drcreeper.awesomecalculator.propertywork.PreferencesConstants;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CalculatorFragment extends Fragment {
 
@@ -36,24 +37,23 @@ public class CalculatorFragment extends Fragment {
             R.id.num_8_button,
             R.id.num_9_button
     })
-    Button[] numbers;
+    Button[] numbersButtons;
     @BindView(R.id.num_dot_button)
-    Button dot;
+    Button dotButton;
     @BindView(R.id.add_button)
-    Button add;
+    Button addButton;
     @BindView(R.id.sub_button)
-    Button sub;
+    Button subButton;
     @BindView(R.id.mul_button)
-    Button mul;
+    Button mulButton;
     @BindView(R.id.div_button)
-    Button div;
-    @BindView(R.id.slove_button)
-    Button slove;
+    Button divButton;
     @BindView(R.id.clear_button)
-    Button clear;
+    Button clearButton;
     @BindView(R.id.erace_button)
-    Button erace;
-    Calculator calculator;
+    Button eraseButton;
+    private Calculator calculator;
+
 
 
     @Override
@@ -62,80 +62,59 @@ public class CalculatorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this, view);
         calculator = new Calculator();
-        CalculatorWriter.restoreState(calculator,getActivity().getSharedPreferences(PreferencesConstants.FILE_NAME, Context.MODE_PRIVATE));
+        CalculatorWriter.restoreState(calculator,getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME, Context.MODE_PRIVATE));
         refresh();
-        for (final Button button : numbers) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        for (final Button button : numbersButtons) {
+            button.setOnClickListener((v) -> {
                     calculator.numPress(button.getText().charAt(0));
                     refresh();
-                }
             });
         }
-        dot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        dotButton.setOnClickListener((v)-> {
                 calculator.numPress('.');
                 refresh();
-            }
         });
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addButton.setOnClickListener((v) -> {
                 calculator.operatorPress(Operator.ADD);
                 refresh();
-            }
         });
-        sub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        subButton.setOnClickListener((v) -> {
                 calculator.operatorPress(Operator.SUB);
                 refresh();
-            }
         });
-        mul.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mulButton.setOnClickListener((v) -> {
                 calculator.operatorPress(Operator.MUL);
                 refresh();
-            }
         });
-        div.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        divButton.setOnClickListener((v) -> {
                 calculator.operatorPress(Operator.DIV);
                 refresh();
-            }
         });
-        slove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculator.solvePress();
-                refresh();
-            }
-        });
-        clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculator.clear();
-                refresh();
-            }
-        });
-        erace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculator.erasePress();
-                refresh();
-            }
-        });
+
+        clearButton.setOnClickListener(this::onClearClick);
+        eraseButton.setOnClickListener(this::onEraseClick);
         return  view;
     }
 
+    @OnClick(R.id.slove_button) //the best
+    public void onSolveClick() {
+        calculator.solvePress();
+        refresh();
+    }
+
+    public void onClearClick(View v) {
+        calculator.clear();
+        refresh();
+    }
+
+    public void onEraseClick(View v) {
+        calculator.erasePress();
+        refresh();
+    }
 
     public void refresh() {
         mainTextView.setText(calculator.getCurrentText());
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PreferencesConstants.FILE_NAME,0);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME,0);
         CalculatorWriter.saveState(calculator,sharedPreferences);
     }
 }

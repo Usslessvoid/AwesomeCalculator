@@ -28,4 +28,8 @@ public class ExampleInstrumentedTest {
         assertEquals("com.exadel.drcreeper.awesomecalculator", appContext.getPackageName());
     }
 
+    @Test
+    public void buttonPressed(){
+        // TODO
+    }
 }
