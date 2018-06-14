@@ -3,22 +3,34 @@ package com.example.drcreeper.awesomecalculator;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class CalculatorUnitTest {
 
+    private Calculator calculator;
+
+    @Before
+    public void before(){
+        calculator = new Calculator();
+    }
+
+    @After
+    public void after(){
+        System.out.println("fuf O_o");
+        System.gc();
+    }
     @Test
     public void testDivide(){
-        Calculator calculator = new Calculator();
+
         calculator.numPress('1');
         calculator.numPress('2');
         calculator.operatorPress(Operator.DIV);
@@ -32,7 +44,7 @@ public class ExampleUnitTest {
 
     @Test
     public void testNoZeroInEnd(){
-        Calculator calculator = new Calculator();
+
         calculator.numPress('8');
         calculator.operatorPress(Operator.SUB);
         calculator.numPress('.');
@@ -44,7 +56,7 @@ public class ExampleUnitTest {
 
     @Test
     public void autoClear(){
-        Calculator calculator = new Calculator();
+
         calculator.numPress('5');
         calculator.operatorPress(Operator.ADD);
         calculator.numPress('3');
@@ -57,7 +69,7 @@ public class ExampleUnitTest {
 
     @Test
     public void dotTest(){
-        Calculator calculator = new Calculator();
+
         calculator.numPress('1');
         calculator.numPress('.');
         calculator.numPress('.');

@@ -1,9 +1,10 @@
 package com.example.drcreeper.awesomecalculator.fragments;
 
-import android.app.Fragment;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.drcreeper.awesomecalculator.R;
+import com.example.drcreeper.awesomecalculator.historywriter.HistoryWriter;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorPreferencesContract;
@@ -100,6 +102,9 @@ public class CalculatorFragment extends Fragment {
     public void onSolveClick() {
         calculator.solvePress();
         refresh();
+        HistoryWriter writer = new HistoryWriter();
+        writer.setContext(getContext());
+        writer.execute(calculator.getHistoryLog());
     }
 
     public void onClearClick(View v) {
@@ -117,4 +122,5 @@ public class CalculatorFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME,0);
         CalculatorWriter.saveState(calculator,sharedPreferences);
     }
+
 }

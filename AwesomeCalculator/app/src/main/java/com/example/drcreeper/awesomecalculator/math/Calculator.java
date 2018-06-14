@@ -11,6 +11,7 @@ public class Calculator {
     private State state = State.INITIAL;
     private boolean isDotAvailable = true;
 
+    private String historyLog = "";
 
 
     public Calculator() {
@@ -65,6 +66,14 @@ public class Calculator {
         isDotAvailable = dotAvailable;
     }
 
+    public String getHistoryLog() {
+        return historyLog;
+    }
+
+    public void setHistoryLog(String historyLog) {
+        this.historyLog = historyLog;
+    }
+
     private void toZero(){
         currentText = "0";
         isDotAvailable = true;
@@ -113,6 +122,24 @@ public class Calculator {
                 break;
             default:
                 result = parseNum();
+        }
+        return result;
+    }
+
+    private String getOperatorSymbol(){
+        String result = " ";
+        switch (operand){
+            case ADD:
+                result = " + ";
+                break;
+            case SUB:
+                result = " - ";
+                break;
+            case MUL:
+                result = " * ";
+                break;
+            case DIV:
+                result = " / ";
         }
         return result;
     }
@@ -174,12 +201,14 @@ public class Calculator {
             case SECOND_NUM_ENTERED:
                 secondOperand = parseNum();
                 show(currentSolve());
+                historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
                 firstOperand = parseNum();
                 state = State.SOLVED;
                 break;
             case SOLVED:
                 firstOperand = parseNum();
                 show(currentSolve());
+                historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
                 firstOperand = parseNum();
                 break;
             case SOLVED_OPERATOR_CHECKED:
@@ -196,6 +225,7 @@ public class Calculator {
         secondOperand = 0;
         operand = Operator.NONE;
         state = State.INITIAL;
+        historyLog = "";
     }
 
     public void erasePress(){
