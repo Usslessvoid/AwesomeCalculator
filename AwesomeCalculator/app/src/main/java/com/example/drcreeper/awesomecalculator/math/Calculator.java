@@ -1,19 +1,18 @@
 package com.example.drcreeper.awesomecalculator.math;
 
-import android.content.SharedPreferences;
+public class Calculator {
 
-import java.io.Serializable;
-
-public class Calculator implements Serializable {
-
-    private static final int TEXT_FIELD_SIZE = 16;
+    private static final int TEXT_FIELD_SIZE = 17;
 
     private String currentText = "0";
     private double firstOperand = 0;
     private double secondOperand = 0;
     private Operator operand = Operator.NONE;
-    private boolean isDotAviable = true;
-    private boolean isSolved = false;
+    private State state = State.INITIAL;
+    private boolean isDotAvailable = true;
+
+    private String historyLog = "";
+
 
     public Calculator() {
         super();
@@ -39,6 +38,14 @@ public class Calculator implements Serializable {
         return secondOperand;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public void setSecondOperand(double secondOperand) {
         this.secondOperand = secondOperand;
     }
@@ -51,25 +58,25 @@ public class Calculator implements Serializable {
         this.operand = operand;
     }
 
-    public boolean isDotAviable() {
-        return isDotAviable;
+    public boolean isDotAvailable() {
+        return isDotAvailable;
     }
 
-    public void setDotAviable(boolean dotAviable) {
-        isDotAviable = dotAviable;
+    public void setDotAvailable(boolean dotAvailable) {
+        isDotAvailable = dotAvailable;
     }
 
-    public boolean isSolved() {
-        return isSolved;
+    public String getHistoryLog() {
+        return historyLog;
     }
 
-    public void setSolved(boolean solved) {
-        isSolved = solved;
+    public void setHistoryLog(String historyLog) {
+        this.historyLog = historyLog;
     }
 
     private void toZero(){
         currentText = "0";
-        isDotAviable = true;
+        isDotAvailable = true;
     }
 
     private double parseNum(){
@@ -77,7 +84,7 @@ public class Calculator implements Serializable {
         try {
             result = Double.parseDouble(currentText);
         }catch (NumberFormatException e){
-            //Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show();
+            clear();
         }
         return result;
     }
@@ -98,40 +105,8 @@ public class Calculator implements Serializable {
         currentText = outputField;
     }
 
-    public void numPress(char c){
-        if(isSolved){
-            toZero();
-            isSolved = false;
-        }
-        if(currentText.length() < TEXT_FIELD_SIZE) {
-            if(c == '.'){
-                if(isDotAviable){
-                    currentText = currentText + ".";
-                    isDotAviable = false;
-                }
-            }else {
-                if(currentText.equals("0")) {
-                    currentText = "";
-                }
-                currentText = currentText + c;
-            }
-        }
-    }
-
-    public void operatorPress(Operator c){
-        operand = c;
-        firstOperand = parseNum();
-        toZero();
-    }
-
-    public void solvePress(){
+    private double currentSolve(){
         double result;
-        if(isSolved){
-            firstOperand = parseNum();
-        }else{
-            isSolved = true;
-            secondOperand = parseNum();
-        }
         switch (operand){
             case ADD:
                 result = firstOperand + secondOperand;
@@ -146,32 +121,132 @@ public class Calculator implements Serializable {
                 result = firstOperand / secondOperand;
                 break;
             default:
-                result = firstOperand;
+                result = parseNum();
         }
-        show(result);
+        return result;
+    }
+
+    private String getOperatorSymbol(){
+        String result = " ";
+        switch (operand){
+            case ADD:
+                result = " + ";
+                break;
+            case SUB:
+                result = " - ";
+                break;
+            case MUL:
+                result = " * ";
+                break;
+            case DIV:
+                result = " / ";
+        }
+        return result;
+    }
+
+    public void numPress(char c){
+        if(state == State.SOLVED){
+            clear();
+        }
+        if(state == State.OPERATOR_CHECKED){
+            toZero();
+            state = State.SECOND_NUM_ENTERED;
+        }
+        if(currentText.length() < TEXT_FIELD_SIZE) {
+            if(c == '.'){
+                if(isDotAvailable){
+                    currentText = currentText + ".";
+                    isDotAvailable = false;
+                }
+            }else {
+                if(currentText.equals("0")) {
+                    currentText = "";
+                }
+                currentText = currentText + c;
+            }
+        }
+    }
+
+    public void operatorPress(Operator c){
+        switch(state){
+            case INITIAL:
+                firstOperand = parseNum();
+                toZero();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+                break;
+            case OPERATOR_CHECKED:
+                operand = c;
+                secondOperand = parseNum();
+                break;
+            case SECOND_NUM_ENTERED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+                break;
+            case SOLVED:
+                firstOperand = parseNum();
+                toZero();
+                state = State.OPERATOR_CHECKED;
+                operand = c;
+        }
+    }
+
+    public void solvePress(){
+        switch(state){
+            case INITIAL:
+                firstOperand = parseNum();
+                show(firstOperand);
+                historyLog = Double.toString(firstOperand) +  " = " + currentText;
+                break;
+            case OPERATOR_CHECKED:
+                show(firstOperand);
+                historyLog = Double.toString(firstOperand) +  " = " + currentText;
+                break;
+            case SECOND_NUM_ENTERED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
+                firstOperand = parseNum();
+                state = State.SOLVED;
+                break;
+            case SOLVED:
+                firstOperand = parseNum();
+                show(currentSolve());
+                historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
+                firstOperand = parseNum();
+                break;
+            case SOLVED_OPERATOR_CHECKED:
+                secondOperand = parseNum();
+                show(currentSolve());
+                firstOperand = parseNum();
+                state = State.SOLVED;
+        }
     }
 
     public void clear(){
+        toZero();
         firstOperand = 0;
         secondOperand = 0;
-        toZero();
-        isSolved = false;
         operand = Operator.NONE;
+        state = State.INITIAL;
+        historyLog = "";
     }
 
-    public void eracePress(){
+    public void erasePress(){
         String oldText = currentText;
         if(oldText.endsWith(".")){
-            isDotAviable = true;
+            isDotAvailable = true;
         }
         if(oldText.length() == 1) {
             toZero();
+            if(state == State.SECOND_NUM_ENTERED){
+                state = State.OPERATOR_CHECKED;
+            }
         }else if (oldText.length() > 0){
             currentText = oldText.substring(0, oldText.length() - 1);
         }
-    }
-
-    public void fromEditor(SharedPreferences preferences){
-
     }
 }

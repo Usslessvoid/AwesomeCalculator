@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Calculator</string>
+    <string name="history_call">History</string>
+    <string name="history_clear">Clear history</string>
+    <string name="history">History</string>
+    <string name="exit">Exit</string>
 </resources>
