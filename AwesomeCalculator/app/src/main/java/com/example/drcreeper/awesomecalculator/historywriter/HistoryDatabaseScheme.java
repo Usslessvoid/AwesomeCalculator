@@ -1,6 +1,6 @@
 package com.example.drcreeper.awesomecalculator.historywriter;
 
-public class HistoryDatabaseContract {
+public class HistoryDatabaseScheme {
 
     public static final String DB_NAME = "operations";
 

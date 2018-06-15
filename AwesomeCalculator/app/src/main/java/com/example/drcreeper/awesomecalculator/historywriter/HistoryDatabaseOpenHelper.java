@@ -4,16 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class HistoryWriterHelper extends SQLiteOpenHelper {
+public class HistoryDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    public HistoryWriterHelper(Context context){
-        super(context,HistoryDatabaseContract.DB_NAME,null,HistoryDatabaseContract.VERSION);
+    public HistoryDatabaseOpenHelper(Context context){
+        super(context, HistoryDatabaseScheme.DB_NAME,null, HistoryDatabaseScheme.VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + HistoryDatabaseContract.HISTORY_TABLE
-                + "(id integer primary key autoincrement, solve string);");
+        db.execSQL("CREATE TABLE history (_id INTEGER PRIMARY KEY AUTOINCREMENT, solve STRING);");
     }
 
     @Override

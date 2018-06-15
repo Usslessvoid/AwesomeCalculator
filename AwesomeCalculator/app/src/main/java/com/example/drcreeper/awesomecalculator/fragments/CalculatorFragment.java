@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.drcreeper.awesomecalculator.R;
-import com.example.drcreeper.awesomecalculator.historywriter.HistoryWriter;
+import com.example.drcreeper.awesomecalculator.asynktasks.SaveOperationToHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorPreferencesContract;
@@ -102,7 +102,7 @@ public class CalculatorFragment extends Fragment {
     public void onSolveClick() {
         calculator.solvePress();
         refresh();
-        HistoryWriter writer = new HistoryWriter();
+        SaveOperationToHistoryAsyncTask writer = new SaveOperationToHistoryAsyncTask();
         writer.setContext(getContext());
         writer.execute(calculator.getHistoryLog());
     }

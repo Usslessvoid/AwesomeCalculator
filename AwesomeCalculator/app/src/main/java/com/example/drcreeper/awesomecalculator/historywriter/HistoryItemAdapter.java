@@ -13,8 +13,8 @@ import com.example.drcreeper.awesomecalculator.R;
 
 import java.util.List;
 
-public class HistoryAdapter extends ArrayAdapter<String> {
-    public HistoryAdapter(Context context,String[] strings){
+public class HistoryItemAdapter extends ArrayAdapter<String> {
+    public HistoryItemAdapter(Context context, String[] strings){
         super(context, R.layout.history_item,strings);
     }
 

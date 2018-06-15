@@ -143,6 +143,7 @@ public class Calculator {
         }
         return result;
     }
+
     public void numPress(char c){
         if(state == State.SOLVED){
             clear();
@@ -196,8 +197,14 @@ public class Calculator {
     public void solvePress(){
         switch(state){
             case INITIAL:
+                firstOperand = parseNum();
+                show(firstOperand);
+                historyLog = Double.toString(firstOperand) +  " = " + currentText;
+                break;
             case OPERATOR_CHECKED:
                 show(firstOperand);
+                historyLog = Double.toString(firstOperand) +  " = " + currentText;
+                break;
             case SECOND_NUM_ENTERED:
                 secondOperand = parseNum();
                 show(currentSolve());

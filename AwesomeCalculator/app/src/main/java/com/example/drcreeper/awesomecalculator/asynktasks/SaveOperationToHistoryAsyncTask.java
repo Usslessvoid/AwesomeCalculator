@@ -1,13 +1,13 @@
-package com.example.drcreeper.awesomecalculator.historywriter;
+package com.example.drcreeper.awesomecalculator.asynktasks;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 
-import com.example.drcreeper.awesomecalculator.HistoryActivity;
+import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseOpenHelper;
+import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseScheme;
 
-public class HistoryWriter extends AsyncTask<String, Void, Void> {
+public class SaveOperationToHistoryAsyncTask extends AsyncTask<String, Void, Void> {
 
     private Context context;
 
@@ -21,9 +21,9 @@ public class HistoryWriter extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... strings) {
-        HistoryWriterHelper helper = new HistoryWriterHelper(context);
+        HistoryDatabaseOpenHelper helper = new HistoryDatabaseOpenHelper(context);
         SQLiteDatabase database = helper.getWritableDatabase();
-        String query = "INSERT INTO " + HistoryDatabaseContract.HISTORY_TABLE +
+        String query = "INSERT INTO " + HistoryDatabaseScheme.HISTORY_TABLE +
                 "(solve) VALUES ('" +
                 strings[0] +
                 "');";
