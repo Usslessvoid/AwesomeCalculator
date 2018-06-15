@@ -10,21 +10,10 @@ import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseOpen
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,String[]> {
+public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>> {
 
     Context context;
-    String[] target = new String[0];
-    List<String> list = new ArrayList<>();
-
-    public String[] getTarget() {
-        return target;
-    }
-
-    public void setTarget(String[] target) {
-        this.target = target;
-    }
 
     public Context getContext() {
         return context;
@@ -35,18 +24,18 @@ public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,String[]> {
     }
 
     @Override
-    protected String[] doInBackground(Void... voids) {
+    protected List<String> doInBackground(Void... voids) {
+        List<String> list = new ArrayList<>();
         SQLiteOpenHelper helper = new HistoryDatabaseOpenHelper(context);
         SQLiteDatabase database = helper.getReadableDatabase();
         String query = "SELECT solve FROM history";
-
         Cursor cursor = database.rawQuery(query,null);
         while (cursor.moveToNext()){
             int id = cursor.getColumnIndex("solve");
             list.add(cursor.getString(id));
         }
         cursor.close();
-        return  list.toArray(new String[0]);
+        return  list;
     }
 
 

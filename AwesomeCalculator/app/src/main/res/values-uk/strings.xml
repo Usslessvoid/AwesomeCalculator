@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Калькулятор</string>
+    <string name="history_call">Ысторыйа</string>
+    <string name="history_clear">Очистить исторю</string>
+    <string name="history">Gicтория</string>
+    <string name="exit">Вихид кляти москали</string>
 </resources>

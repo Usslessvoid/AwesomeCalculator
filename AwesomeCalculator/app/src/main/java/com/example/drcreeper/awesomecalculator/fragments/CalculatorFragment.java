@@ -2,16 +2,22 @@ package com.example.drcreeper.awesomecalculator.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.drcreeper.awesomecalculator.R;
+import com.example.drcreeper.awesomecalculator.activities.HistoryActivity;
+import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.SaveOperationToHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
@@ -60,6 +66,7 @@ public class CalculatorFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.calculator_fragment, container, false);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this, view);
@@ -123,4 +130,25 @@ public class CalculatorFragment extends Fragment {
         CalculatorWriter.saveState(calculator,sharedPreferences);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.open_history:
+                Intent intent = new Intent(getActivity(),HistoryActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.clear_history:
+                DeleteHistoryListAsyncTask deleter = new DeleteHistoryListAsyncTask(getActivity());
+                deleter.execute();
+                break;
+            case R.id.exit:
+                getActivity().finish();
+        }
+        return true;
+    }
 }
