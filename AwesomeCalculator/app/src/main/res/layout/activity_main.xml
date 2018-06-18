@@ -7,15 +7,10 @@
     android:visibility="visible"
     tools:context="com.example.drcreeper.awesomecalculator.MainActivity2">
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.example.drcreeper.awesomecalculator.fragments.CalculatorFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <fragment
-            android:id="@+id/fragment"
-            android:name="com.example.drcreeper.awesomecalculator.fragments.CalculatorFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

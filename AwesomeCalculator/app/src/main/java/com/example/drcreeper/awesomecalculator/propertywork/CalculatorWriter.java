@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import com.example.drcreeper.awesomecalculator.math.Calculator;
 import com.example.drcreeper.awesomecalculator.math.Operator;
-import com.example.drcreeper.awesomecalculator.math.State;
+import com.example.drcreeper.awesomecalculator.math.CalculatorState;
 
 public class CalculatorWriter {
 
@@ -24,7 +24,7 @@ public class CalculatorWriter {
         calculator.setFirstOperand(sharedPreferences.getFloat(CalculatorPreferencesContract.KEY_FIRST_OPERAND,0));
         calculator.setSecondOperand(sharedPreferences.getFloat(CalculatorPreferencesContract.KEY_SECOND_OPERAND,0));
         calculator.setOperand(Operator.valueOf(sharedPreferences.getString(CalculatorPreferencesContract.KEY_OPERATOR,"NONE")));
-        calculator.setState(State.valueOf(sharedPreferences.getString(CalculatorPreferencesContract.KEY_STATE,"INITIAL")));
+        calculator.setState(CalculatorState.valueOf(sharedPreferences.getString(CalculatorPreferencesContract.KEY_STATE,"INITIAL")));
         calculator.setDotAvailable(sharedPreferences.getBoolean(CalculatorPreferencesContract.KEY_DOT_AVAILABLE,true));
 
     }
