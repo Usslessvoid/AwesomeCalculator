@@ -13,7 +13,16 @@ import java.util.List;
 
 public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>> {
 
-    Context context;
+    private Context context;
+    AfterExecute callback;
+
+    public AfterExecute getCallback() {
+        return callback;
+    }
+
+    public void setCallback(AfterExecute callback) {
+        this.callback = callback;
+    }
 
     public Context getContext() {
         return context;
@@ -38,6 +47,8 @@ public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>
         return  list;
     }
 
-
-
+    @Override
+    protected void onPostExecute(List<String> list) {
+        callback.setAfterQuery(list);
+    }
 }

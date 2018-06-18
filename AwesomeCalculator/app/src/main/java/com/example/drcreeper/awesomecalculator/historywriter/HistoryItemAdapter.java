@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.R;
 
@@ -26,6 +27,12 @@ public class HistoryItemAdapter extends ArrayAdapter<String> {
         String currentText = getItem(position);
         TextView textView = view.findViewById(R.id.item_text);
         textView.setText(currentText);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),currentText,Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 }

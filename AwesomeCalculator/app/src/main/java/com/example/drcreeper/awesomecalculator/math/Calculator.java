@@ -8,7 +8,7 @@ public class Calculator {
     private double firstOperand = 0;
     private double secondOperand = 0;
     private Operator operand = Operator.NONE;
-    private State state = State.INITIAL;
+    private CalculatorState state = CalculatorState.INITIAL;
     private boolean isDotAvailable = true;
 
     private String historyLog = "";
@@ -38,11 +38,11 @@ public class Calculator {
         return secondOperand;
     }
 
-    public State getState() {
+    public CalculatorState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(CalculatorState state) {
         this.state = state;
     }
 
@@ -70,6 +70,11 @@ public class Calculator {
         return historyLog;
     }
 
+    /**
+     *
+     * @param historyLog
+     * Don't use this method, it may destroy north korea!
+     */
     public void setHistoryLog(String historyLog) {
         this.historyLog = historyLog;
     }
@@ -145,12 +150,12 @@ public class Calculator {
     }
 
     public void numPress(char c){
-        if(state == State.SOLVED){
+        if(state == CalculatorState.SOLVED){
             clear();
         }
-        if(state == State.OPERATOR_CHECKED){
+        if(state == CalculatorState.OPERATOR_CHECKED){
             toZero();
-            state = State.SECOND_NUM_ENTERED;
+            state = CalculatorState.SECOND_NUM_ENTERED;
         }
         if(currentText.length() < TEXT_FIELD_SIZE) {
             if(c == '.'){
@@ -172,7 +177,7 @@ public class Calculator {
             case INITIAL:
                 firstOperand = parseNum();
                 toZero();
-                state = State.OPERATOR_CHECKED;
+                state = CalculatorState.OPERATOR_CHECKED;
                 operand = c;
                 break;
             case OPERATOR_CHECKED:
@@ -183,13 +188,13 @@ public class Calculator {
                 secondOperand = parseNum();
                 show(currentSolve());
                 firstOperand = parseNum();
-                state = State.OPERATOR_CHECKED;
+                state = CalculatorState.OPERATOR_CHECKED;
                 operand = c;
                 break;
             case SOLVED:
                 firstOperand = parseNum();
                 toZero();
-                state = State.OPERATOR_CHECKED;
+                state = CalculatorState.OPERATOR_CHECKED;
                 operand = c;
         }
     }
@@ -210,7 +215,7 @@ public class Calculator {
                 show(currentSolve());
                 historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
                 firstOperand = parseNum();
-                state = State.SOLVED;
+                state = CalculatorState.SOLVED;
                 break;
             case SOLVED:
                 firstOperand = parseNum();
@@ -222,7 +227,7 @@ public class Calculator {
                 secondOperand = parseNum();
                 show(currentSolve());
                 firstOperand = parseNum();
-                state = State.SOLVED;
+                state = CalculatorState.SOLVED;
         }
     }
 
@@ -231,7 +236,7 @@ public class Calculator {
         firstOperand = 0;
         secondOperand = 0;
         operand = Operator.NONE;
-        state = State.INITIAL;
+        state = CalculatorState.INITIAL;
         historyLog = "";
     }
 
@@ -242,8 +247,8 @@ public class Calculator {
         }
         if(oldText.length() == 1) {
             toZero();
-            if(state == State.SECOND_NUM_ENTERED){
-                state = State.OPERATOR_CHECKED;
+            if(state == CalculatorState.SECOND_NUM_ENTERED){
+                state = CalculatorState.OPERATOR_CHECKED;
             }
         }else if (oldText.length() > 0){
             currentText = oldText.substring(0, oldText.length() - 1);

@@ -1,6 +1,6 @@
 package com.example.drcreeper.awesomecalculator.math;
 
-public enum State {
+public enum CalculatorState {
     INITIAL,
     OPERATOR_CHECKED,
     SECOND_NUM_ENTERED,

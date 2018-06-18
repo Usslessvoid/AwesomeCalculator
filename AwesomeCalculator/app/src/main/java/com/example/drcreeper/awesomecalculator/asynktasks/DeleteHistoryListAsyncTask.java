@@ -10,18 +10,10 @@ import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseSche
 
 public class DeleteHistoryListAsyncTask extends AsyncTask<Void,Void,Void> {
 
-    Context context;
+    private Context context;
 
     public DeleteHistoryListAsyncTask(Context context){
         super();
-        this.context = context;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
         this.context = context;
     }
 

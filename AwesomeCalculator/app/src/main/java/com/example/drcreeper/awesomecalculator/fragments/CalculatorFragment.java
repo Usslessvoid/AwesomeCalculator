@@ -46,20 +46,7 @@ public class CalculatorFragment extends Fragment {
             R.id.num_9_button
     })
     Button[] numbersButtons;
-    @BindView(R.id.num_dot_button)
-    Button dotButton;
-    @BindView(R.id.add_button)
-    Button addButton;
-    @BindView(R.id.sub_button)
-    Button subButton;
-    @BindView(R.id.mul_button)
-    Button mulButton;
-    @BindView(R.id.div_button)
-    Button divButton;
-    @BindView(R.id.clear_button)
-    Button clearButton;
-    @BindView(R.id.erace_button)
-    Button eraseButton;
+
     private Calculator calculator;
 
 
@@ -71,63 +58,16 @@ public class CalculatorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this, view);
         calculator = new Calculator();
-        CalculatorWriter.restoreState(calculator,getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME, Context.MODE_PRIVATE));
+        CalculatorWriter.restoreState(calculator, getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME, Context.MODE_PRIVATE));
         refresh();
         for (final Button button : numbersButtons) {
             button.setOnClickListener((v) -> {
-                    calculator.numPress(button.getText().charAt(0));
-                    refresh();
+                calculator.numPress(button.getText().charAt(0));
+                refresh();
             });
         }
-        dotButton.setOnClickListener((v)-> {
-                calculator.numPress('.');
-                refresh();
-        });
-        addButton.setOnClickListener((v) -> {
-                calculator.operatorPress(Operator.ADD);
-                refresh();
-        });
-        subButton.setOnClickListener((v) -> {
-                calculator.operatorPress(Operator.SUB);
-                refresh();
-        });
-        mulButton.setOnClickListener((v) -> {
-                calculator.operatorPress(Operator.MUL);
-                refresh();
-        });
-        divButton.setOnClickListener((v) -> {
-                calculator.operatorPress(Operator.DIV);
-                refresh();
-        });
 
-        clearButton.setOnClickListener(this::onClearClick);
-        eraseButton.setOnClickListener(this::onEraseClick);
-        return  view;
-    }
-
-    @OnClick(R.id.slove_button) //the best
-    public void onSolveClick() {
-        calculator.solvePress();
-        refresh();
-        SaveOperationToHistoryAsyncTask writer = new SaveOperationToHistoryAsyncTask();
-        writer.setContext(getContext());
-        writer.execute(calculator.getHistoryLog());
-    }
-
-    public void onClearClick(View v) {
-        calculator.clear();
-        refresh();
-    }
-
-    public void onEraseClick(View v) {
-        calculator.erasePress();
-        refresh();
-    }
-
-    public void refresh() {
-        mainTextView.setText(calculator.getCurrentText());
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME,0);
-        CalculatorWriter.saveState(calculator,sharedPreferences);
+        return view;
     }
 
     @Override
@@ -146,9 +86,65 @@ public class CalculatorFragment extends Fragment {
                 DeleteHistoryListAsyncTask deleter = new DeleteHistoryListAsyncTask(getActivity());
                 deleter.execute();
                 break;
-            case R.id.exit:
-                getActivity().finish();
         }
         return true;
     }
+
+    @OnClick(R.id.num_dot_button)
+    public void dotPress(){
+        calculator.numPress('.');
+        refresh();
+    }
+
+    @OnClick(R.id.add_button)
+    public void onAddPress() {
+        calculator.operatorPress(Operator.ADD);
+        refresh();
+    }
+
+    @OnClick(R.id.sub_button)
+    public void onSubButton() {
+        calculator.operatorPress(Operator.SUB);
+        refresh();
+    }
+
+    @OnClick(R.id.mul_button)
+    public void onMulButton() {
+        calculator.operatorPress(Operator.MUL);
+        refresh();
+    }
+
+    @OnClick(R.id.div_button)
+    public void onDivButton() {
+        calculator.operatorPress(Operator.DIV);
+        refresh();
+    }
+
+    @OnClick(R.id.slove_button)
+    public void onSolveClick() {
+        calculator.solvePress();
+        refresh();
+        SaveOperationToHistoryAsyncTask writer = new SaveOperationToHistoryAsyncTask();
+        writer.setContext(getContext());
+        writer.execute(calculator.getHistoryLog());
+    }
+
+    @OnClick(R.id.clear_button)
+    public void onClearClick() {
+        calculator.clear();
+        refresh();
+    }
+
+    @OnClick(R.id.erace_button)
+    public void onEraseClick() {
+        calculator.erasePress();
+        refresh();
+    }
+
+    public void refresh() {
+        mainTextView.setText(calculator.getCurrentText());
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(CalculatorPreferencesContract.FILE_NAME,0);
+        CalculatorWriter.saveState(calculator,sharedPreferences);
+    }
+
 }
