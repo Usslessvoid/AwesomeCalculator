@@ -1,6 +1,5 @@
 package com.example.drcreeper.awesomecalculator.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,14 +14,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.drcreeper.awesomecalculator.R;
-import com.example.drcreeper.awesomecalculator.activities.HistoryActivity;
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.GetOperationsListAsyncTask;
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

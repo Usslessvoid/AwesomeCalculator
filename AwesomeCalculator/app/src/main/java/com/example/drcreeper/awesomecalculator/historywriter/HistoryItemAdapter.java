@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.R;
 
@@ -22,17 +21,17 @@ public class HistoryItemAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.history_item,parent,false);
-        String currentText = getItem(position);
-        TextView textView = view.findViewById(R.id.item_text);
-        textView.setText(currentText);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(),currentText,Toast.LENGTH_SHORT).show();
-            }
-        });
-        return view;
+
+        ViewHolder viewHolder;
+        if(convertView == null) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.history_item, parent, false);
+            viewHolder = new ViewHolder((TextView) convertView.findViewById(R.id.item_text));
+            convertView.setTag(viewHolder);
+        }else {
+            viewHolder = (ViewHolder)convertView.getTag();
+        }
+        viewHolder.view.setText(getItem(position));
+        return convertView;
     }
 }

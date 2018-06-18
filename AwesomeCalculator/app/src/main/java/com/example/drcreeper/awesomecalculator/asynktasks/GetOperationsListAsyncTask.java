@@ -14,7 +14,7 @@ import java.util.List;
 public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>> {
 
     private Context context;
-    AfterExecute callback;
+    private AfterExecute callback;
 
     public AfterExecute getCallback() {
         return callback;
