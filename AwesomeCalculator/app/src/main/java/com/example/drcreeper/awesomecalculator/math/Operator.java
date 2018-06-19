@@ -6,4 +6,5 @@ public enum Operator {
     MUL,
     DIV,
     NONE
+
 }

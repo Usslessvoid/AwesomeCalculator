@@ -12,6 +12,7 @@ public class Calculator {
     private boolean isDotAvailable = true;
 
     private String historyLog = "";
+    private CalculatorHistory history;
 
 
     public Calculator() {
@@ -147,6 +148,13 @@ public class Calculator {
                 result = " / ";
         }
         return result;
+    }
+
+    private void setHistory(){
+        history.setFirstOperand(firstOperand);
+        history.setOperator(operand);
+        history.setSecondOperand(secondOperand);
+        history.setResult(parseNum());
     }
 
     public void numPress(char c){

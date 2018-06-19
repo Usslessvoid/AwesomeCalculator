@@ -3,4 +3,5 @@
     <string name="history_call">Ысторыйа</string>
     <string name="history_clear">Очистить исторю</string>
     <string name="history">Gicтория</string>
+    <string name="empty">(Няма)</string>
 </resources>
