@@ -3,4 +3,5 @@
     <string name="history_call">История операций</string>
     <string name="history_clear">Очистить исторю</string>
     <string name="history">История</string>
+    <string name="empty">(Нет операций)</string>
 </resources>

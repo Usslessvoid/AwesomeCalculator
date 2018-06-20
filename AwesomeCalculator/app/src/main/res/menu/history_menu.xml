@@ -3,8 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/clear_all"
-        android:icon="@android:drawable/ic_delete"
-        android:title="@string/history"
+        android:id="@+id/choose_history"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/history_call"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/clear_all"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/history"
+        app:showAsAction="always" />
 </menu>
