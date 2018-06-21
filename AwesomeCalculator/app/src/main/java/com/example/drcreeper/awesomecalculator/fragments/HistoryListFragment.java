@@ -1,33 +1,24 @@
 package com.example.drcreeper.awesomecalculator.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.R;
-import com.example.drcreeper.awesomecalculator.asynktasks.AfterExecute;
-import com.example.drcreeper.awesomecalculator.asynktasks.Callback;
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteItemsHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.GetOperationsListAsyncTask;
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryItemAdapter;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +34,7 @@ public class HistoryListFragment extends Fragment {
     ListView listView;
     @BindView(R.id.empty_text)
     TextView emptyText;
-    List<String> list = new ArrayList<>();
+    List<CalculatorHistory> list = new ArrayList<>();
     GetOperationsListAsyncTask reader = null;
     HistoryItemAdapter adapter;
     boolean selectMode = false;
@@ -80,11 +71,11 @@ public class HistoryListFragment extends Fragment {
                 if(selectMode){
                     adapter = new HistoryItemAdapter(getContext(), list);
                     listView.setAdapter(adapter);
-                    listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+
                 }else {
                     adapter = new HistoryItemAdapter(getContext(), R.layout.history_item_selectable, list);
                     listView.setAdapter(adapter);
-                    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
 
                 }
 

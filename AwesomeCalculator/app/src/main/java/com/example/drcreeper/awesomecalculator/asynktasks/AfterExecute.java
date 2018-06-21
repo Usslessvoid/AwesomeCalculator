@@ -1,7 +1,9 @@
 package com.example.drcreeper.awesomecalculator.asynktasks;
 
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+
 import java.util.List;
 
 public interface AfterExecute {
-    public void setAfterQuery(List<String> list);
+    void setAfterQuery(List<CalculatorHistory> list);
 }

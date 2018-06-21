@@ -20,6 +20,7 @@ import com.example.drcreeper.awesomecalculator.activities.HistoryActivity;
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.SaveOperationToHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorPreferencesContract;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorWriter;
@@ -126,7 +127,7 @@ public class CalculatorFragment extends Fragment {
         refresh();
         SaveOperationToHistoryAsyncTask writer = new SaveOperationToHistoryAsyncTask();
         writer.setContext(getContext());
-        writer.execute(calculator.getHistoryLog());
+        writer.execute(new CalculatorHistory[]{calculator.getHistory()});
     }
 
     @OnClick(R.id.clear_button)
