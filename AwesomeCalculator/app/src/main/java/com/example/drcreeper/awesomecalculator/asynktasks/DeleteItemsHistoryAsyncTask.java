@@ -2,6 +2,7 @@ package com.example.drcreeper.awesomecalculator.asynktasks;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
@@ -65,16 +66,22 @@ public class DeleteItemsHistoryAsyncTask extends AsyncTask<Void,Void,Void> {
         }
         list.close();
 
-
-        db = helper.getWritableDatabase();
-        for(int i:input){
-            int target = ids.get(i);
+        try {
+            db = helper.getWritableDatabase();
             db.beginTransaction();
-            db.execSQL("DELETE FROM " + HistoryDatabaseScheme.HISTORY_TABLE + " WHERE " + HistoryDatabaseScheme.HISTORY_ID+
-            " = " + Integer.toString(target) + ";");
+            for (int i : input) {
+                int target = ids.get(i);
+                db.delete(HistoryDatabaseScheme.HISTORY_TABLE,HistoryDatabaseScheme.HISTORY_ID + " = " + Integer.toString(target),null);
+                //db.execSQL("DELETE FROM " + HistoryDatabaseScheme.HISTORY_TABLE + " WHERE " + HistoryDatabaseScheme.HISTORY_ID +
+                //        " = " + Integer.toString(target) + ";");
+
+            }
             db.setTransactionSuccessful();
+        }catch (SQLException e){
+
+        }finally {
             db.endTransaction();
-        }/**/
+        }
         return null;
     }
 

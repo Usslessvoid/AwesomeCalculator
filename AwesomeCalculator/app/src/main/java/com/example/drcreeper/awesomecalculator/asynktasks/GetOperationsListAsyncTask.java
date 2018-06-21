@@ -2,16 +2,21 @@ package com.example.drcreeper.awesomecalculator.asynktasks;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseOpenHelper;
+import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseScheme;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+import com.example.drcreeper.awesomecalculator.math.Operator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>> {
+public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<CalculatorHistory>> {
 
     private Context context;
     private AfterExecute callback;
@@ -33,22 +38,33 @@ public class GetOperationsListAsyncTask extends AsyncTask<Void,Void,List<String>
     }
 
     @Override
-    protected List<String> doInBackground(Void... voids) {
-        List<String> list = new ArrayList<>();
-        SQLiteOpenHelper helper = new HistoryDatabaseOpenHelper(context);
-        SQLiteDatabase database = helper.getReadableDatabase();
-        String query = "SELECT solve FROM history";
-        Cursor cursor = database.rawQuery(query,null);
-        while (cursor.moveToNext()){
-            int id = cursor.getColumnIndex("solve");
-            list.add(cursor.getString(id));
-        }
-        cursor.close();
+    protected List<CalculatorHistory> doInBackground(Void... voids) {
+
+        List<CalculatorHistory> list = new ArrayList<>();
+
+            SQLiteOpenHelper helper = new HistoryDatabaseOpenHelper(context);
+            SQLiteDatabase database = helper.getReadableDatabase();
+            String query = "SELECT first_operand , second_operand , operator , result FROM history";
+            Cursor cursor = database.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                CalculatorHistory history = new CalculatorHistory();
+                int idFirstOperand = cursor.getColumnIndex(HistoryDatabaseScheme.HISTORY_FIRST_OPERAND);
+                int idSecondOperand = cursor.getColumnIndex(HistoryDatabaseScheme.HISTORY_SECOND_OPERAND);
+                int idOperator = cursor.getColumnIndex(HistoryDatabaseScheme.HISTORY_OPERATOR);
+                int idResult = cursor.getColumnIndex(HistoryDatabaseScheme.HISTORY_RESULT);
+                history.setFirstOperand(cursor.getDouble(idFirstOperand));
+                history.setSecondOperand(cursor.getDouble(idSecondOperand));
+                history.setOperator(Operator.valueOf(cursor.getString(idOperator)));
+                history.setResult(cursor.getDouble(idResult));
+                list.add(history);
+            }
+            cursor.close();
+
         return  list;
     }
 
     @Override
-    protected void onPostExecute(List<String> list) {
+    protected void onPostExecute(List<CalculatorHistory> list) {
         callback.setAfterQuery(list);
     }
 }

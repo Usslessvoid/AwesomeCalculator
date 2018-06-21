@@ -71,6 +71,14 @@ public class Calculator {
         return historyLog;
     }
 
+    public CalculatorHistory getHistory() {
+        return history;
+    }
+
+    public void setHistory(CalculatorHistory history) {
+        this.history = history;
+    }
+
     /**
      *
      * @param historyLog
@@ -151,6 +159,7 @@ public class Calculator {
     }
 
     private void setHistory(){
+        history = new CalculatorHistory();
         history.setFirstOperand(firstOperand);
         history.setOperator(operand);
         history.setSecondOperand(secondOperand);
@@ -222,6 +231,7 @@ public class Calculator {
                 secondOperand = parseNum();
                 show(currentSolve());
                 historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
+                setHistory();
                 firstOperand = parseNum();
                 state = CalculatorState.SOLVED;
                 break;
@@ -229,6 +239,7 @@ public class Calculator {
                 firstOperand = parseNum();
                 show(currentSolve());
                 historyLog = Double.toString(firstOperand) + getOperatorSymbol() + Double.toString(secondOperand) + " = " + currentText;
+                setHistory();
                 firstOperand = parseNum();
                 break;
             case SOLVED_OPERATOR_CHECKED:

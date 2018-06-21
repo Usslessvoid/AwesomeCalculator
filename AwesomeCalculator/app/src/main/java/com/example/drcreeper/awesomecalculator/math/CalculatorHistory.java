@@ -47,7 +47,7 @@ public class CalculatorHistory {
         isChecked = checked;
     }
 
-    private String getOperatorSymbol(){
+    public String getOperatorSymbol(){
         String result = " ";
         switch (operator){
             case ADD:

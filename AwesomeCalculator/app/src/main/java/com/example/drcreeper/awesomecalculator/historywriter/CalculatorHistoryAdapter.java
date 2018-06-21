@@ -26,12 +26,12 @@ public class CalculatorHistoryAdapter extends ArrayAdapter<CalculatorHistory> {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.history_item, parent, false);
-            viewHolder = new ViewHolder((TextView) convertView.findViewById(R.id.item_text));
+            viewHolder = new ViewHolder();
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        viewHolder.view.setText(getItem(position).toString());
+        viewHolder.firstOperand.setText(getItem(position).toString());
         return convertView;
     }
 }

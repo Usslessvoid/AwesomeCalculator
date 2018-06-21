@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.R;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryItemAdapter extends ArrayAdapter<String> {
+public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
 
     private List<Integer> pos = new ArrayList<>();
 
@@ -29,12 +29,13 @@ public class HistoryItemAdapter extends ArrayAdapter<String> {
     }
 
     private int tmpId;
-    public HistoryItemAdapter(Context context,List<String> list){
+
+    public HistoryItemAdapter(Context context,List<CalculatorHistory> list){
         super(context, R.layout.history_item,list);
         tmpId = R.layout.history_item;
     }
 
-    public HistoryItemAdapter(Context context,int id,List<String> list){
+    public HistoryItemAdapter(Context context,int id,List<CalculatorHistory> list){
         super(context, R.layout.history_item,list);
         tmpId = id;
     }
@@ -42,19 +43,41 @@ public class HistoryItemAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View view = inflater.inflate(tmpId,parent,false);
+        CalculatorHistory history = getItem(position);
+        TextView firstOperand = (TextView)view.findViewById(R.id.first_operand_text);
+        firstOperand.setText(Double.toString(history.getFirstOperand()));
+        TextView secondOperand = (TextView)view.findViewById(R.id.second_operand_text);
+        secondOperand.setText(Double.toString(history.getSecondOperand()));
+        TextView operator = (TextView)view.findViewById(R.id.operator_text);
+        operator.setText(history.getOperatorSymbol());
+        TextView result = (TextView)view.findViewById(R.id.result_text);
+        result.setText(Double.toString(history.getResult()));
+
+/*   IT"S NOT TIME FOR VIEW HOLDER))))))
         ViewHolder viewHolder;
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(tmpId, parent, false);
-            viewHolder = new ViewHolder((TextView) convertView.findViewById(R.id.item_text));
+            viewHolder = new ViewHolder();
+            viewHolder.setFirstOperand((TextView)parent.findViewById(R.id.first_operand_text));
+            viewHolder.setSecondOperand((TextView)parent.findViewById(R.id.second_operand_text));
+            viewHolder.setOperator((TextView)parent.findViewById(R.id.operator_text));
+            viewHolder.setOperator((TextView)parent.findViewById(R.id.result_text));
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        viewHolder.view.setText(getItem(position));
+        CalculatorHistory history = getItem(position);
+        viewHolder.getFirstOperand().setText(Double.toString(history.getFirstOperand()));
+        viewHolder.getSecondOperand().setText(Double.toString(history.getSecondOperand()));
+        viewHolder.getOperator().setText(history.getOperatorSymbol());
+        viewHolder.getResult().setText(Double.toString(history.getResult()));
+*/
         if(tmpId == R.layout.history_item_selectable){ //maybe not best solution
-            View finalConvertView = convertView;
-            convertView.setOnClickListener((d)->{
+            View finalConvertView = view;
+            view.setOnClickListener((d)->{
                 CheckBox c = (CheckBox)finalConvertView.findViewById(R.id.checkBox);
                 c.setChecked(!c.isChecked());
                 Integer i = new Integer(position);
@@ -69,6 +92,6 @@ public class HistoryItemAdapter extends ArrayAdapter<String> {
 /*
         */
         //convertView.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
-        return convertView;
+        return view;
     }
 }
