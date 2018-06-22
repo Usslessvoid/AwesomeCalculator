@@ -11,12 +11,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.drcreeper.awesomecalculator.R;
-import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistoryItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
+public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistoryItem> {
 
     private List<Integer> pos = new ArrayList<>();
 
@@ -30,12 +30,12 @@ public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
 
     private int tmpId;
 
-    public HistoryItemAdapter(Context context,List<CalculatorHistory> list){
+    public HistoryItemAdapter(Context context,List<CalculatorHistoryItem> list){
         super(context, R.layout.history_item,list);
         tmpId = R.layout.history_item;
     }
 
-    public HistoryItemAdapter(Context context,int id,List<CalculatorHistory> list){
+    public HistoryItemAdapter(Context context,int id,List<CalculatorHistoryItem> list){
         super(context, R.layout.history_item,list);
         tmpId = id;
     }
@@ -43,55 +43,43 @@ public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(tmpId,parent,false);
-        CalculatorHistory history = getItem(position);
-        TextView firstOperand = (TextView)view.findViewById(R.id.first_operand_text);
-        firstOperand.setText(Double.toString(history.getFirstOperand()));
-        TextView secondOperand = (TextView)view.findViewById(R.id.second_operand_text);
-        secondOperand.setText(Double.toString(history.getSecondOperand()));
-        TextView operator = (TextView)view.findViewById(R.id.operator_text);
-        operator.setText(history.getOperatorSymbol());
-        TextView result = (TextView)view.findViewById(R.id.result_text);
-        result.setText(Double.toString(history.getResult()));
 
-/*   IT"S NOT TIME FOR VIEW HOLDER))))))
         ViewHolder viewHolder;
+        CalculatorHistoryItem history = getItem(position);
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(tmpId, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.setFirstOperand((TextView)parent.findViewById(R.id.first_operand_text));
-            viewHolder.setSecondOperand((TextView)parent.findViewById(R.id.second_operand_text));
-            viewHolder.setOperator((TextView)parent.findViewById(R.id.operator_text));
-            viewHolder.setOperator((TextView)parent.findViewById(R.id.result_text));
+            viewHolder.setFirstOperand((TextView)convertView.findViewById(R.id.first_operand_text));
+            viewHolder.setSecondOperand((TextView)convertView.findViewById(R.id.second_operand_text));
+            viewHolder.setOperator((TextView)convertView.findViewById(R.id.operator_text));
+            viewHolder.setResult((TextView)convertView.findViewById(R.id.result_text));
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        CalculatorHistory history = getItem(position);
         viewHolder.getFirstOperand().setText(Double.toString(history.getFirstOperand()));
         viewHolder.getSecondOperand().setText(Double.toString(history.getSecondOperand()));
         viewHolder.getOperator().setText(history.getOperatorSymbol());
         viewHolder.getResult().setText(Double.toString(history.getResult()));
-*/
+
         if(tmpId == R.layout.history_item_selectable){ //maybe not best solution
-            View finalConvertView = view;
-            view.setOnClickListener((d)->{
-                CheckBox c = (CheckBox)finalConvertView.findViewById(R.id.checkBox);
-                c.setChecked(!c.isChecked());
-                Integer i = new Integer(position);
+            CheckBox c = (CheckBox)convertView.findViewById(R.id.checkBox);
+            Integer i = new Integer(position);
+            if (pos.contains(i)){
+                c.setChecked(true);
+            }
+            convertView.setOnClickListener((d)->{
                 if(pos.contains(i)){
                     pos.remove(i);
+                    c.setChecked(false);
                 }else {
                     pos.add(i);
+                    c.setChecked(true);
                 }
 
             });
         }
-/*
-        */
-        //convertView.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
-        return view;
+        return convertView;
     }
 }

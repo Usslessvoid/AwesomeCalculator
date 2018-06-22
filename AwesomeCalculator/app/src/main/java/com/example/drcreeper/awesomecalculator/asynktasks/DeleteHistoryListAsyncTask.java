@@ -11,18 +11,18 @@ import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseSche
 public class DeleteHistoryListAsyncTask extends AsyncTask<Void,Void,Void> {
 
     private Context context;
-    private Callback onCompleteListener;
+    private OnItemsDeleteCallback onCompleteListener;
 
     public DeleteHistoryListAsyncTask(Context context){
         super();
         this.context = context;
     }
 
-    public Callback getOnCompleteListener() {
+    public OnItemsDeleteCallback getOnCompleteListener() {
         return onCompleteListener;
     }
 
-    public void setOnCompleteListener(Callback onCompleteListener) {
+    public void setOnCompleteListener(OnItemsDeleteCallback onCompleteListener) {
         this.onCompleteListener = onCompleteListener;
     }
 
@@ -38,6 +38,6 @@ public class DeleteHistoryListAsyncTask extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        onCompleteListener.onComplete();
+        onCompleteListener.onItemsDelete();
     }
 }

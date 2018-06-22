@@ -12,7 +12,7 @@ public class Calculator {
     private boolean isDotAvailable = true;
 
     private String historyLog = "";
-    private CalculatorHistory history;
+    private CalculatorHistoryItem history;
 
 
     public Calculator() {
@@ -71,11 +71,11 @@ public class Calculator {
         return historyLog;
     }
 
-    public CalculatorHistory getHistory() {
+    public CalculatorHistoryItem getHistory() {
         return history;
     }
 
-    public void setHistory(CalculatorHistory history) {
+    public void setHistory(CalculatorHistoryItem history) {
         this.history = history;
     }
 
@@ -159,7 +159,7 @@ public class Calculator {
     }
 
     private void setHistory(){
-        history = new CalculatorHistory();
+        history = new CalculatorHistoryItem();
         history.setFirstOperand(firstOperand);
         history.setOperator(operand);
         history.setSecondOperand(secondOperand);

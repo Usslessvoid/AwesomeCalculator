@@ -11,12 +11,11 @@ import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseSche
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DeleteItemsHistoryAsyncTask extends AsyncTask<Void,Void,Void> {
 
     private Context context;
-    private Callback callback;
+    private OnItemsDeleteCallback onItemsDeleteCallback;
     private List<Integer> input;
 
     public DeleteItemsHistoryAsyncTask() {
@@ -26,17 +25,17 @@ public class DeleteItemsHistoryAsyncTask extends AsyncTask<Void,Void,Void> {
         this.context = context;
     }
 
-    public DeleteItemsHistoryAsyncTask(Context context, Callback callback) {
+    public DeleteItemsHistoryAsyncTask(Context context, OnItemsDeleteCallback onItemsDeleteCallback) {
         this.context = context;
-        this.callback = callback;
+        this.onItemsDeleteCallback = onItemsDeleteCallback;
     }
 
-    public Callback getCallback() {
-        return callback;
+    public OnItemsDeleteCallback getOnItemsDeleteCallback() {
+        return onItemsDeleteCallback;
     }
 
-    public void setCallback(Callback callback) {
-        this.callback = callback;
+    public void setOnItemsDeleteCallback(OnItemsDeleteCallback onItemsDeleteCallback) {
+        this.onItemsDeleteCallback = onItemsDeleteCallback;
     }
 
     public void setInput(List<Integer> input) {
@@ -87,6 +86,6 @@ public class DeleteItemsHistoryAsyncTask extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        callback.onComplete();
+        onItemsDeleteCallback.onItemsDelete();
     }
 }
