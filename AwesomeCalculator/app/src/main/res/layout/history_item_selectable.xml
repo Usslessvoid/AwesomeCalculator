@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="0"
-        android:textColor="@color/textColor"
+        android:textColor="#d21616"
         android:textSize="30sp" />
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="0"
-        android:textColor="@color/textColor"
+        android:textColor="#07cdb3"
         android:textSize="30sp" />
 
     <TextView
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="0"
-        android:textColor="@color/textColor"
+        android:textColor="@android:color/holo_green_dark"
         android:textSize="30sp" />
 
 </LinearLayout>

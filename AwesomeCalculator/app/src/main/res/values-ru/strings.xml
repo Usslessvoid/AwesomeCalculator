@@ -4,4 +4,8 @@
     <string name="history_clear">Очистить исторю</string>
     <string name="history">История</string>
     <string name="empty">(Нет операций)</string>
+    <string name="confirm_dialog">Удалить всё?</string>
+    <string name="text_dialog">Все данные будут потеряны!</string>
+    <string name="yes_button">Да</string>
+    <string name="no_button">Нет</string>
 </resources>

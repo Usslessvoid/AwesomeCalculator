@@ -54,8 +54,8 @@ public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
         operator.setText(history.getOperatorSymbol());
         TextView result = (TextView)view.findViewById(R.id.result_text);
         result.setText(Double.toString(history.getResult()));
-
-/*   IT"S NOT TIME FOR VIEW HOLDER))))))
+/*
+   IT"S NOT TIME FOR VIEW HOLDER))))))
         ViewHolder viewHolder;
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -74,17 +74,22 @@ public class HistoryItemAdapter extends ArrayAdapter<CalculatorHistory> {
         viewHolder.getSecondOperand().setText(Double.toString(history.getSecondOperand()));
         viewHolder.getOperator().setText(history.getOperatorSymbol());
         viewHolder.getResult().setText(Double.toString(history.getResult()));
-*/
+        View view =convertView;
+        */
         if(tmpId == R.layout.history_item_selectable){ //maybe not best solution
             View finalConvertView = view;
+            CheckBox c = (CheckBox)finalConvertView.findViewById(R.id.checkBox);
+            Integer i = new Integer(position);
+            if (pos.contains(i)){
+                c.setChecked(true);
+            }
             view.setOnClickListener((d)->{
-                CheckBox c = (CheckBox)finalConvertView.findViewById(R.id.checkBox);
-                c.setChecked(!c.isChecked());
-                Integer i = new Integer(position);
                 if(pos.contains(i)){
                     pos.remove(i);
+                    c.setChecked(false);
                 }else {
                     pos.add(i);
+                    c.setChecked(true);
                 }
 
             });
