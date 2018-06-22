@@ -1,6 +1,6 @@
 package com.example.drcreeper.awesomecalculator.math;
 
-public class CalculatorHistory {
+public class CalculatorHistoryItem {
     private double firstOperand;
     private double secondOperand;
     private Operator operator;

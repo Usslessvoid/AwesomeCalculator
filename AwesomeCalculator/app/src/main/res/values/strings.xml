@@ -8,4 +8,5 @@
     <string name="text_dialog">All results will be cleared!</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
+    <string name="delete_success">All history deleled</string>
 </resources>

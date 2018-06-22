@@ -1,6 +1,5 @@
 package com.example.drcreeper.awesomecalculator.fragments;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,7 @@ import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsync
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteItemsHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.GetOperationsListAsyncTask;
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryItemAdapter;
-import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistoryItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class HistoryListFragment extends Fragment {
     ListView listView;
     @BindView(R.id.empty_text)
     TextView emptyText;
-    List<CalculatorHistory> list = new ArrayList<>();
+    List<CalculatorHistoryItem> list = new ArrayList<>();
     GetOperationsListAsyncTask reader = null;
     HistoryItemAdapter adapter;
     boolean selectMode = false;
@@ -97,7 +96,7 @@ public class HistoryListFragment extends Fragment {
                         adapter = new HistoryItemAdapter(getContext(),list);
                         listView.setAdapter(adapter);
                     });
-                    task.setCallback(()->{
+                    task.setOnItemsDeleteCallback(()->{
 
                         reader.execute();
                     });

@@ -3,13 +3,12 @@ package com.example.drcreeper.awesomecalculator.asynktasks;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseOpenHelper;
 import com.example.drcreeper.awesomecalculator.historywriter.HistoryDatabaseScheme;
-import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistoryItem;
 
-public class SaveOperationToHistoryAsyncTask extends AsyncTask<CalculatorHistory, Void, Void> {
+public class SaveOperationToHistoryAsyncTask extends AsyncTask<CalculatorHistoryItem, Void, Void> {
 
     private Context context;
 
@@ -22,7 +21,7 @@ public class SaveOperationToHistoryAsyncTask extends AsyncTask<CalculatorHistory
     }
 
     @Override
-    protected Void doInBackground(CalculatorHistory... histories) {
+    protected Void doInBackground(CalculatorHistoryItem... histories) {
         HistoryDatabaseOpenHelper helper = new HistoryDatabaseOpenHelper(context);
         SQLiteDatabase database = helper.getWritableDatabase();
         String query = "INSERT INTO " + HistoryDatabaseScheme.HISTORY_TABLE +

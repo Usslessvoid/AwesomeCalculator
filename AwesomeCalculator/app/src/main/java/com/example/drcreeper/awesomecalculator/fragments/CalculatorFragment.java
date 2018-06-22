@@ -14,13 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.drcreeper.awesomecalculator.R;
 import com.example.drcreeper.awesomecalculator.activities.HistoryActivity;
 import com.example.drcreeper.awesomecalculator.asynktasks.DeleteHistoryListAsyncTask;
 import com.example.drcreeper.awesomecalculator.asynktasks.SaveOperationToHistoryAsyncTask;
 import com.example.drcreeper.awesomecalculator.math.Calculator;
-import com.example.drcreeper.awesomecalculator.math.CalculatorHistory;
+import com.example.drcreeper.awesomecalculator.math.CalculatorHistoryItem;
 import com.example.drcreeper.awesomecalculator.math.Operator;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorPreferencesContract;
 import com.example.drcreeper.awesomecalculator.propertywork.CalculatorWriter;
@@ -85,7 +86,15 @@ public class CalculatorFragment extends Fragment {
                 break;
             case R.id.clear_history:
                 DeleteHistoryListAsyncTask deleter = new DeleteHistoryListAsyncTask(getActivity());
-                deleter.execute();
+                deleter.setOnCompleteListener(()->{
+                    Toast.makeText(getContext(),R.string.delete_success,Toast.LENGTH_LONG).show();
+                });
+                DeleteDialogFragment dialog = new DeleteDialogFragment();
+                dialog.setOnConfirm((arg0,arg1)->{
+                    deleter.execute();
+                    arg0.cancel();
+                });
+                dialog.show(getFragmentManager(),"delete_all");
                 break;
         }
         return true;
@@ -127,7 +136,7 @@ public class CalculatorFragment extends Fragment {
         refresh();
         SaveOperationToHistoryAsyncTask writer = new SaveOperationToHistoryAsyncTask();
         writer.setContext(getContext());
-        writer.execute(new CalculatorHistory[]{calculator.getHistory()});
+        writer.execute(new CalculatorHistoryItem[]{calculator.getHistory()});
     }
 
     @OnClick(R.id.clear_button)

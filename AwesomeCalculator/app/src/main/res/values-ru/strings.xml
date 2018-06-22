@@ -8,4 +8,5 @@
     <string name="text_dialog">Все данные будут потеряны!</string>
     <string name="yes_button">Да</string>
     <string name="no_button">Нет</string>
+    <string name="delete_success">Вся история удалена</string>
 </resources>
